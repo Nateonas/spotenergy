@@ -1,0 +1,3 @@
+module apps.spotenergy
+spotenergyApp 1.0 spotenergyApp.qml
+spotenergyScreen 1.0 spotenergyScreen.qml
