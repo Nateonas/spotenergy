@@ -1,11 +1,11 @@
-import QtQuick 1.1
+import QtQuick 2.1
 
 import qb.components 1.0
 
 Screen {
 	id: spotenergyScreen
 
-	screenTitleIconUrl: "./drawables/spotenergyIcon.png"
+	screenTitleIconUrl: "qrc:/tsc/spotenergyIcon.png"
 
 	screenTitle: "SpotEnergy"
 

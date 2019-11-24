@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 
 import qb.components 1.0
 import qb.base 1.0
@@ -16,6 +16,6 @@ SystrayIcon {
 	Image {
 		id: imgSpotenergy
 		anchors.centerIn: parent
-		source: "./drawables/spotenergyIcon.png"
+		source: "qrc:/tsc/spotenergyIcon.png"
 	}
 }

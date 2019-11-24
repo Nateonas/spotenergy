@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import qb.components 1.0
 import qb.base 1.0
 import "spotenergy.js" as SpotenergyJS 
@@ -11,7 +11,7 @@ App {
 	// preventing problems when passing them around to code that comes from a different path.
 	property url trayUrl : "SpotenergyTray.qml";
 	property url tileUrl : "SpotenergyTile.qml";
-	property url thumbnailIcon: "./drawables/spotenergyIcon.png"
+	property url thumbnailIcon: "qrc:/tsc/spotenergyIcon.png"
 	property url spotenergyScreenUrl : "SpotenergyScreen.qml"
 	property url spotenergySettingsUrl : "SpotenergySettings.qml"
 

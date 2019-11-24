@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import qb.components 1.0
 import BxtClient 1.0
 
@@ -298,7 +298,7 @@ Screen {
 	IconButton {
 		id: energyTaxValueLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: energyTaxValueLabel.right
@@ -332,7 +332,7 @@ Screen {
 	IconButton {
 		id: odeTaxValueLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: odeTaxValueLabel.right
@@ -366,7 +366,7 @@ Screen {
 	IconButton {
 		id: vatTaxValueLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: vatTaxValueLabel.right
@@ -399,7 +399,7 @@ Screen {
 	IconButton {
 		id: lookBackValueLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: lookBackValueLabel.right
@@ -434,7 +434,7 @@ Screen {
 	IconButton {
 		id: lookForwardValueLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: lookForwardValueLabel.right
@@ -479,7 +479,7 @@ Screen {
 	IconButton {
 		id: domoticzHostLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: domoticzHostLabel.right
@@ -513,7 +513,7 @@ Screen {
 	IconButton {
 		id: domoticzPortLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: domoticzPortLabel.right
@@ -547,7 +547,7 @@ Screen {
 	IconButton {
 		id: domoticzIdxLabelButton;
 		width: 40
-		iconSource: "./drawables/edit.png"
+		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
 			left: domoticzIdxLabel.right
