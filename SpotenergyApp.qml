@@ -105,6 +105,11 @@ App {
 		return normalizedTariff;	
 	}
 
+	function getCurrentTariffs() {
+		// should check a setting later to switch between data providers
+		getCurrentTariffsEntsoe()
+	}
+
 	function getCurrentTariffsEntsoe() {
 		var now = new Date();
 		currentHour = now.getHours();
@@ -119,25 +124,29 @@ App {
 					var res = xmlhttp.responseText
 					var tariffsTemp = []
 					var i = res.indexOf("<Period>")
-					var j = 0 
+					var j = res.indexOf("</Period>")
 					while ( i > 0 ) { 
-						res = res.slice(i)
-						i = res.indexOf("<start>")
-						j = res.indexOf("</start>")
-						var quoteTime = Date.parse(res.slice(i+7,j))
-						i = res.indexOf("<price.amount>")
+						var period = res.slice(i+8,j)
+						res = res.slice(j+9)
+						i = period.indexOf("<start>")
+						j = period.indexOf("</start>")
+						var start = period.slice(i+7,j)
+						var quoteTime = Date.parse(start) - 3600000
+						i = period.indexOf("<price.amount>")
 						while ( i > 0 ) {
-							res = res.slice(i+14)
-							j = res.indexOf("</price.amount>")
-							var quotePrice = res.slice(0,j)
-							var quoteTime = quoteTime + 3600000
+							period = period.slice(i+14)
+							j = period.indexOf("</price.amount>")
+							var quotePrice = period.slice(0,j) / 1000
+							var quoteTime = quoteTime + 3600000 // for now this is good, every next index is one hour later
 							var quoteTarrif = {timestamp: quoteTime, tariff: quotePrice}
 							if (quoteTime >= now.getTime() && quoteTime <= endDate.getTime() ) {
 								tariffsTemp.push(quoteTarrif)
 							}
-							i = res.indexOf("<price.amount>")
+							i = period.indexOf("<price.amount>")
 						}
+						// next period
 						i = res.indexOf("<Period>")
+						j = res.indexOf("</Period>")
 					}
                                         tariffsTemp.sort(function(a, b){return a.timestamp - b.timestamp});
                                         datapoints = tariffsTemp.length;
@@ -232,7 +241,6 @@ App {
 				}
 				else {
 					console.log("APX URL fetch failed!");
-					getCurrentTariffsEntsoe();
 				}
 			}
 		}
@@ -253,7 +261,7 @@ App {
 			var now = new Date();
 			var secondsUntilNextHour = ((59 - now.getMinutes()) * 60) + (60 - now.getSeconds());
 			collectTariffsTimer.interval = secondsUntilNextHour * 1000;
-			getCurrentTariffsEntsoe();
+			getCurrentTariffs();
 		}
 	}
 
