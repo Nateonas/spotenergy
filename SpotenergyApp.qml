@@ -56,6 +56,7 @@ App {
 	Component.onCompleted: {
 		// load the settings on completed is recommended instead of during init
 		loadSettings(); 
+		collectTariffsTimer.interval = 1000; // set refresh of timer after 1 sec to get new tariffs in case of parameter changed after load
 	}
 
 	function loadSettings()  {
@@ -68,7 +69,6 @@ App {
 						if (temp[setting] === undefined )  { temp[setting] = settings[setting]; } // use default if no saved setting exists
 					}
 					settings = temp;
-					collectTariffsTimer.interval = 10000; // set refresh of timer after 10 sec to get new tariffs in case of parameter changed after load
 				}
 				else {
 					loadSettingsOldApp(); //try to get settings from old easyenergy app
@@ -76,28 +76,6 @@ App {
 			}
 		}
 		settingsFile.open("GET", "file:///mnt/data/tsc/spotenergy.userSettings.json", true);
-		settingsFile.send();
-	}
-
-	function loadSettingsOldApp()  {
-		var settingsFile = new XMLHttpRequest();
-		settingsFile.onreadystatechange = function() {
-			if (settingsFile.readyState == XMLHttpRequest.DONE) {
-				if (settingsFile.responseText.length > 0)  {
-					var temp = JSON.parse(settingsFile.responseText);
-					for (var setting in settings) {
-						if (temp[setting] === undefined )  { temp[setting] = settings[setting]; } // use default if no saved setting exists
-					}
-					settings = temp;
-					collectTariffsTimer.interval = 10000; // set refresh of timer after 10 sec to get new tariffs in case of parameter changed after load
-					// save old easyenergy app settings to new settings file
-                			var saveFile = new XMLHttpRequest();
-                			saveFile.open("PUT", "file:///mnt/data/tsc/spotenergy.userSettings.json");
-			                saveFile.send(JSON.stringify(settings));
-				}
-			}
-		}
-		settingsFile.open("GET", "file:///HCBv2/qml/apps/easyenergy/easyenergy.settings", true);
 		settingsFile.send();
 	}
 
@@ -127,7 +105,79 @@ App {
 		return normalizedTariff;	
 	}
 
-	function getCurrentTariffs() {
+	function getCurrentTariffsEntsoe() {
+		var now = new Date();
+		currentHour = now.getHours();
+		startHour = currentHour - settings.lookbackHours; // start the graph at the start point set
+		now.setHours(startHour,0,0,0);
+		var endDate = new Date(now.getTime() + ((settings.lookforwardHours + settings.lookbackHours) * 3600 * 1000)); // end the graph at the end piont set
+
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function() {
+			if (xmlhttp.readyState == 4) {
+				if (xmlhttp.status == 200) {
+					var res = xmlhttp.responseText
+					var tariffsTemp = []
+					var i = res.indexOf("<Period>")
+					var j = 0 
+					while ( i > 0 ) { 
+						res = res.slice(i)
+						i = res.indexOf("<start>")
+						j = res.indexOf("</start>")
+						var quoteTime = Date.parse(res.slice(i+7,j))
+						i = res.indexOf("<price.amount>")
+						while ( i > 0 ) {
+							res = res.slice(i+14)
+							j = res.indexOf("</price.amount>")
+							var quotePrice = res.slice(0,j)
+							var quoteTime = quoteTime + 3600000
+							var quoteTarrif = {timestamp: quoteTime, tariff: quotePrice}
+							if (quoteTime >= now.getTime() && quoteTime <= endDate.getTime() ) {
+								tariffsTemp.push(quoteTarrif)
+							}
+							i = res.indexOf("<price.amount>")
+						}
+						i = res.indexOf("<Period>")
+					}
+                                        tariffsTemp.sort(function(a, b){return a.timestamp - b.timestamp});
+                                        datapoints = tariffsTemp.length;
+
+                                        var tariffs = [];
+                                        for (var i = 0; i < tariffsTemp.length; i++) {
+                                                tariffs[i] = tariffsTemp[i].tariff;
+                                                if (minTariffValue > tariffs[i]) {
+                                                        minTariffValue = tariffs[i];
+                                                }
+                                                if (maxTariffValue < tariffs[i]) {
+                                                        maxTariffValue = tariffs[i];
+                                                }
+                                        }
+
+                                        tariffValues = tariffs.slice();
+
+                                        // calculate the quartiles for the low and high tariff
+                                        var quartiles= SpotenergyJS.getQuartiles(tariffs);
+                                        tariffQ1 = quartiles[0];
+                                        tariffMedian = quartiles[1];
+                                        tariffQ3 = quartiles[2];
+
+                                        // set the current tariff and normalize
+                                        currentTariffUsage = tariffs[settings.lookbackHours];
+                                        if (settings.domoticzEnable) { updateDomoticz(); }
+
+				}
+				else {
+					console.log("SpotEnergy: ENTSOE URL fetch failed!");
+				}
+			}
+		}
+		var urlAppend = "TimeInterval=" + encodeURIComponent(now.toISOString() + "/" + endDate.toISOString());
+		var urlEntsoe = "https://transparency.entsoe.eu/api?securityToken=68aa46a3-3b1b-4071-ac6b-4372830b114f&documentType=A44&Out_Domain=10YNL----------L&In_Domain=10YNL----------L&" + urlAppend;
+		xmlhttp.open("GET", urlEntsoe, true);
+		xmlhttp.send();
+	}
+
+	function getCurrentTariffsApx() {
 		var now = new Date();
 		currentHour = now.getHours();
 		startHour = currentHour - settings.lookbackHours; // start the graph at the start point set
@@ -182,6 +232,7 @@ App {
 				}
 				else {
 					console.log("APX URL fetch failed!");
+					getCurrentTariffsEntsoe();
 				}
 			}
 		}
@@ -194,7 +245,7 @@ App {
 	Timer {
 		id: collectTariffsTimer
 		interval: 300000
-		triggeredOnStart: true 
+		triggeredOnStart: false
 		running: true
 		repeat: true
 		onTriggered: {
@@ -202,7 +253,7 @@ App {
 			var now = new Date();
 			var secondsUntilNextHour = ((59 - now.getMinutes()) * 60) + (60 - now.getSeconds());
 			collectTariffsTimer.interval = secondsUntilNextHour * 1000;
-			getCurrentTariffs();
+			getCurrentTariffsEntsoe();
 		}
 	}
 
