@@ -1,0 +1,77 @@
+2.0.5
+- min-value fix
+
+2.0.4
+- changed to Entsoe as data provider 
+
+2.0.3
+- moved the settings file to the /mnt/data/tsc folder, preparing for exciting future stuff.
+  No functional changes.
+
+2.0.2
+- compatible for virtual keyboard in fw 5.2 
+
+2.0.1
+- fix corrupted icon
+- fix graphing of non-scaled tax-included option
+
+2.0.0
+- rename from easyenergy to spotenergy
+- change default taxes to 2019
+- remove easyenergy source, only apxgroup website as source
+
+1.3.5
+- toon 2 fix for settings screen layout 
+
+1.3.3
+- firmware 5 compatibility
+
+1.3.1
+- APX hours offset by -1  corrected
+
+1.3.0
+- added APX dashboard fallback URL if easyenergy site does not work
+
+1.2.4
+- change to be compatible with 4.16 
+
+1.2.3
+- change default taxes due to changes in year 2018
+
+1.2.2
+- fix BTW tariff as EasyEnergy changed API to include BTW already 
+
+1.2.1
+- fix difference in high tariff colorText and domoticz events
+
+1.2.0
+- set alert device in domoticz depening on tariff high or low 
+- small bugfix regarding setting lookback hours settings save
+- rewrite of load/save settings code, now saved in json format 
+
+1.1.1
+- color tariff text during dim state (config) 
+- energy tax, enviroment tax (Opslag Duurzame Energie) and VAT are now
+seperate configurable 
+- tariff received from EasyEnergy is without VAT, so include VAT when
+configured 
+
+1.1.0
+- changed Q1 and Q3 calculation to real quartiles
+- changed main screen layout
+- changed dimState colors
+- new: graph scaling toggle
+- fixed horizontal lines in fullscreen mode not right height
+- some cleaning up and adding more comments
+
+1.0.2
+- add edit buttons to lookForward and lookBack settings
+- fixing ident globally
+- fix lookForward and lookBack validating
+- add refresh of graphs after paramater change due to loadSettings
+
+1.0.1
+- minor change moving loadSettings to correct function
+
+1.0
+-initial release august 2016
