@@ -205,7 +205,6 @@ App {
 					var tariffsTemp = [];
 					minTariffValue = 1000;
 					maxTariffValue = -1000;
-					maxTariffValue = 0;
 					for (var i = 0; i < jsonRes.quote.length; i++) {
 						var quoteDateApplied = jsonRes.quote[i].date_applied;
 						var quoteHour = jsonRes.quote[i].values[1].value;
