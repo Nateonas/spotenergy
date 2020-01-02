@@ -21,8 +21,8 @@ App {
 	// https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/overige_belastingen/belastingen_op_milieugrondslag/tarieven_milieubelastingen/tabellen_tarieven_milieubelastingen
 	property variant settings: { 
 		"includeTax" : true, 
-		"tariffEnergyTax": 0.0986,
-		"tariffODETax": 0.0189,
+		"tariffEnergyTax": 0.0977,
+		"tariffODETax": 0.0273,
 		"tariffVAT": 21,
 		"domoticzEnable": false, 
 		"domoticzHost": "domoticz.local",
