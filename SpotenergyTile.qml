@@ -31,7 +31,7 @@ Tile {
 		if (dimState && !app.settings.showColorinDim) {
 			return (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTextColor : colors.tileTextColor	
 		} else {
-			return app.currentTextcolor()
+			return app.currentTextColor()
 		}
 
 	}
