@@ -27,6 +27,15 @@ Tile {
 		}	       
 	}
 
+	function pickTileTextColor() {
+		if (dimState && !app.settings.showColorinDim) {
+			return (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTextColor : colors.tileTextColor	
+		} else {
+			return app.currentTextcolor()
+		}
+
+	}
+
 	onClicked: {
 		stage.openFullscreen(app.spotenergyScreenUrl);
 	}
@@ -42,7 +51,7 @@ Tile {
 			family: qfont.regular.name
 			pixelSize: qfont.tileTitle
 		}
-		color: colors.tileTitleColor
+		color: (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTitleColor : colors.tileTitleColor
 		text: "Huidig tarief"
 	}
 
@@ -50,7 +59,7 @@ Tile {
 	Text {
 		id: txtTariff
 		text: "\u20AC" + app.normalizeTariff(app.currentTariffUsage) 
-		color: (dimState && !app.settings.showColorinDim) ? colors.tileTextColor : app.currentTextColor()
+		color: pickTileTextColor() 
 		anchors {
 			top: tileTitle.bottom 
 			topMargin: 0
@@ -87,7 +96,7 @@ Tile {
 					anchors.horizontalCenter: parent.horizontalCenter
 					text: (index + app.startHour) % 24
 					font.pointSize: 4
-					color: colors.tileTextColor 
+					color: (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTextColor : colors.tileTextColor 
 					visible: !((index + app.startHour) % 3) //show each 3 hours an x-index
 				}
 			}
