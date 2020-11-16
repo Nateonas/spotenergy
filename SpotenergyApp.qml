@@ -180,6 +180,7 @@ App {
 				}
 				else {
 					console.log("SpotEnergy: ENTSOE URL fetch failed!");
+				 	getCurrentTariffsEasyEnergy();	
 				}
 			}
 		}
@@ -189,7 +190,7 @@ App {
 		xmlhttp.send();
 	}
 
-	function getCurrentTariffsApx() {
+	function getCurrentTariffsEasyEnergy() {
 		var now = new Date();
 		currentHour = now.getHours();
 		startHour = currentHour - settings.lookbackHours; // start the graph at the start point set
@@ -202,35 +203,22 @@ App {
 				if (xmlhttp.status == 200) {
 					var res = xmlhttp.responseText;
 					var jsonRes = JSON.parse(res);
-					var tariffsTemp = [];
-					minTariffValue = 1000;
-					maxTariffValue = -1000;
-					for (var i = 0; i < jsonRes.quote.length; i++) {
-						var quoteDateApplied = jsonRes.quote[i].date_applied;
-						var quoteHour = jsonRes.quote[i].values[1].value;
-						var quotePrice = jsonRes.quote[i].values[3].value / 1000;
-						var quoteTime = quoteDateApplied + (quoteHour - 1) * 3600000 // this works ok in winter time.. need to check this when it is summer time
-						var quoteTarrif = {timestamp: quoteTime, tariff: quotePrice};
-						if (quoteTime >= now.getTime() && quoteTime <= endDate.getTime() ) {
-							tariffsTemp.push(quoteTarrif);
-						}
-						
-					}
-					tariffsTemp.sort(function(a, b){return a.timestamp - b.timestamp});
-					datapoints = tariffsTemp.length;
-
+					datapoints = jsonRes.length;
 					var tariffs = [];
-                                        for (var i = 0; i < tariffsTemp.length; i++) {
-                                                tariffs[i] = tariffsTemp[i].tariff;
-                                                if (minTariffValue > tariffs[i]) {
-                                                        minTariffValue = tariffs[i];
-                                                }
-                                                if (maxTariffValue < tariffs[i]) {
-                                                        maxTariffValue = tariffs[i];
-                                                }
-                                        }
-
-					tariffValues = tariffs.slice();
+					minTariffValue = 1000;
+					maxTariffValue = 0;
+					// walk trhough the xml result and put the values into a temporary array
+					for (var i = 0; i < jsonRes.length; i++) {
+						// since a few weeks easyenergy includes tax in the reported tariffusage, so remove it first
+						tariffs[i] = (jsonRes[i].TariffUsage / ((settings.tariffVAT / 100) + 1) );
+						if (minTariffValue > tariffs[i]) {
+							minTariffValue = tariffs[i];
+						}
+						if (maxTariffValue < tariffs[i]) {
+							maxTariffValue = tariffs[i];
+						}
+					}
+					tariffValues = tariffs.slice(); // copy the collected tarrifs into the app property (somehow not possible without the tariffs array)
 
 					// calculate the quartiles for the low and high tariff 
 					var quartiles= SpotenergyJS.getQuartiles(tariffs);
@@ -243,15 +231,15 @@ App {
 					if (settings.domoticzEnable) { updateDomoticz(); }
 				}
 				else {
-					console.log("APX URL fetch failed!");
+					console.log("Easyenergy URL fetch failed also!");
 				}
 			}
 		}
-		var urlAPX = "https://www.apxgroup.com/rest-api/quotes/APX%20Power%20NL%20Hourly?type=all&limit=3"
-		xmlhttp.open("GET", urlAPX, true);
+		var urlAppend = "startTimestamp=" + encodeURIComponent(now.toISOString()) + "&endTimestamp=" + encodeURIComponent(endDate.toISOString());
+		var urlEasyEnergy = "https://mijn.easyenergy.com/nl/api/tariff/getapxtariffs?" + urlAppend;
+		xmlhttp.open("GET", urlEasyEnergy, true);
 		xmlhttp.send();
 	}
-
 
 	Timer {
 		id: collectTariffsTimer

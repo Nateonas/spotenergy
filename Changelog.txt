@@ -1,3 +1,6 @@
+2.0.8
+- add easyenergy as backup source when entsoe fails and remove old apx source
+
 2.0.7
 - dimmableColors update
 
