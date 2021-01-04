@@ -1,3 +1,6 @@
+2.0.9
+- update default taxes 2021
+
 2.0.8
 - add easyenergy as backup source when entsoe fails and remove old apx source
 
