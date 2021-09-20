@@ -21,8 +21,8 @@ App {
 	// https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/overige_belastingen/belastingen_op_milieugrondslag/tarieven_milieubelastingen/tabellen_tarieven_milieubelastingen
 	property variant settings: { 
 		"includeTax" : true, 
-		"tariffEnergyTax": 0.09428,
-		"tariffODETax": 0.03,
+                "tariffEnergyTax": 0.09428,
+                "tariffODETax": 0.03,
 		"tariffVAT": 21,
 		"domoticzEnable": false, 
 		"domoticzHost": "domoticz.local",
@@ -150,6 +150,11 @@ App {
 					}
                                         tariffsTemp.sort(function(a, b){return a.timestamp - b.timestamp});
                                         datapoints = tariffsTemp.length;
+					if ( ((datapoints - settings.lookbackHours) < 6) && (settings.lookforwardHours > 6 ) ) {
+						console.log("SpotEnergy: ENTSOE URL fetch returned not enough datapoints!");
+					 	getCurrentTariffsEasyEnergy();	
+						return;
+					}
 
 					minTariffValue = 1000;
 					maxTariffValue = -1000;
@@ -209,8 +214,8 @@ App {
 					maxTariffValue = 0;
 					// walk trhough the xml result and put the values into a temporary array
 					for (var i = 0; i < jsonRes.length; i++) {
-						// since a few weeks easyenergy includes tax in the reported tariffusage, so remove it first
-						tariffs[i] = (jsonRes[i].TariffUsage / ((settings.tariffVAT / 100) + 1) );
+						// since a few weeks easyenergy includes tax in the reported tariffusage, but still raw value in tariffreturn so use that 
+						tariffs[i] = jsonRes[i].TariffReturn
 						if (minTariffValue > tariffs[i]) {
 							minTariffValue = tariffs[i];
 						}

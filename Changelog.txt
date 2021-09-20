@@ -1,3 +1,6 @@
+2.1.0
+- update to check for enough datapoints, else fallback to another source
+
 2.0.9
 - update default taxes 2021
 
