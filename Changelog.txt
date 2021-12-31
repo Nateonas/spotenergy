@@ -1,3 +1,6 @@
+2.1.1
+- update the 2022 energy taxes
+
 2.1.0
 - update to check for enough datapoints, else fallback to another source
 
