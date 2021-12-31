@@ -17,12 +17,12 @@ App {
 
 	property SpotenergySettings spotenergySettings
 	// these are the default settings
-	// for tax values see next site to update if it is changed, defaults are for 2019
+	// for tax values see next site to update if it is changed, defaults are for 2022
 	// https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/overige_belastingen/belastingen_op_milieugrondslag/tarieven_milieubelastingen/tabellen_tarieven_milieubelastingen
 	property variant settings: { 
 		"includeTax" : true, 
-                "tariffEnergyTax": 0.09428,
-                "tariffODETax": 0.03,
+                "tariffEnergyTax": 0.03679,
+                "tariffODETax": 0.0305,
 		"tariffVAT": 21,
 		"domoticzEnable": false, 
 		"domoticzHost": "domoticz.local",
