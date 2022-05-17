@@ -64,7 +64,7 @@ Screen {
 	Text {
 		id: txtTariff
 		text: "\u20AC" + app.normalizeTariff(app.currentTariffUsage)
-		color: app.currentTextColor()
+		color: app.tariffTextColor(app.currentTariffUsage)
 		anchors {
 			top: tileTitle.bottom
 			topMargin: 0
@@ -96,7 +96,10 @@ Screen {
 					anchors.bottom: parent.bottom
 					anchors.bottomMargin: 30
 					anchors.horizontalCenter: parent.horizontalCenter
-					color: ((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600"
+					radius: 10
+					border.width: 5
+					border.color: ((index + app.startHour) === app.currentHour) ? "#0099ff" : ( app.settings.coloredBars ? app.barColor(index) : "#ff6600")
+					color: app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600")
 					height: calculateHeight(spotenergyScreenRow.height,app.tariffValues[index])
 					width: (spotenergyScreenRow.width / app.datapoints - 5) // two pixels smaller than the parent item to keep gaps between the bars
 				}
@@ -132,6 +135,30 @@ Screen {
 		anchors.leftMargin: 5
 		anchors.verticalCenterOffset: 0
 		anchors.verticalCenter: spotenergyQ3Line.verticalCenter
+		horizontalAlignment: Text.AlignHCenter
+		font.pixelSize: 12
+		font.family: qfont.regular.name
+	}
+
+	Rectangle {
+		id: spotenergyQ2Line
+		anchors.bottom: spotenergyScreenRow.bottom
+		anchors.left: spotenergyScreenRow.left
+		width: spotenergyScreenRow.width
+		height: 2
+		opacity: 0.5
+		color: "#ffff00"
+		anchors.bottomMargin: 30 + calculateHeight(spotenergyScreenRow.height,app.tariffMedian) 
+		border.width: 0
+	}
+	Text {
+		id: q2TariffValue
+		text: "\u20AC" + app.normalizeTariff(app.tariffMedian)
+		color: colors.tileTitleColor
+		anchors.left: mainRectangle.left
+		anchors.leftMargin: 5
+		anchors.verticalCenterOffset: 0
+		anchors.verticalCenter: spotenergyQ2Line.verticalCenter
 		horizontalAlignment: Text.AlignHCenter
 		font.pixelSize: 12
 		font.family: qfont.regular.name

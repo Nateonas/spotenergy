@@ -30,6 +30,8 @@ Screen {
 			domoticzHostLabel.rightText = app.settings.domoticzHost;
 			domoticzPortLabel.rightText = app.settings.domoticzPort;
 			domoticzIdxLabel.rightText = app.settings.domoticzIdx;
+			algoMedianToggle.isSwitchedOn = app.settings.algoMedian;
+			coloredBarsToggle.isSwitchedOn = app.settings.coloredBars;
 			firstShown = false;
 		}
 	}
@@ -55,6 +57,8 @@ Screen {
 		temp.domoticzHost = domoticzHostLabel.rightText;
 		temp.domoticzPort = domoticzPortLabel.rightText;
 		temp.domoticzIdx = domoticzIdxLabel.rightText;
+		temp.algoMedian = algoMedianToggle.isSwitchedOn; 
+		temp.coloredBars = coloredBarsToggle.isSwitchedOn; 
 		app.settings = temp;
 
 		firstShown = true; // we have saved the settings so on a fresh settings screen we can load the input boxes with the new app settings
@@ -273,6 +277,50 @@ Screen {
 		anchors.left: dimColorToggle.left
 		anchors.leftMargin: 0
 		anchors.top: domoticzToggleText.top
+		leftIsSwitchedOn: false
+	}
+
+	// use median or average algoritme 
+	Text {
+		id: algoMedianToggleText
+		anchors {
+			left: dimColorText.left
+			top: domoticzToggleText.bottom                       
+			topMargin: 40
+		}
+		font.pixelSize: 16
+		font.family: qfont.semiBold.name
+		text: "Use median as average"
+	}
+
+	OnOffToggle {
+		id: algoMedianToggle
+		height: 36
+		anchors.left: domoticzToggle.left
+		anchors.leftMargin: 0
+		anchors.top: algoMedianToggleText.top
+		leftIsSwitchedOn: false
+	}
+
+	// use colored bars 
+	Text {
+		id: coloredBarsToggleText
+		anchors {
+			left: dimColorText.left
+			top: algoMedianToggleText.bottom                       
+			topMargin: 40
+		}
+		font.pixelSize: 16
+		font.family: qfont.semiBold.name
+		text: "Show colored bars"
+	}
+
+	OnOffToggle {
+		id: coloredBarsToggle
+		height: 36
+		anchors.left: algoMedianToggle.left
+		anchors.leftMargin: 0
+		anchors.top: coloredBarsToggleText.top
 		leftIsSwitchedOn: false
 	}
 

@@ -32,6 +32,8 @@ App {
 		"lookforwardHours": 18,
 		"scaleGraph": true,
 		"showColorinDim": true,
+		"algoMedian": true,
+		"coloredBars": true,
 	}
 
 	property variant tariffValues: [] // will contain the collected tariffs
@@ -91,12 +93,29 @@ App {
 
 	}
 
-	function currentTextColor() {
+	function tariffTextColor(trf) {
 		// set tile text color based on calculated averages
 		var colorNow = "#FF0000";
-		if (currentTariffUsage < tariffQ3) { colorNow = "#FF6600"; } 
-		if (currentTariffUsage < tariffQ1) { colorNow = "#00FF00"; }
+		if (trf < tariffQ3) { colorNow = "#FF6600"; } 
+		if (trf < tariffQ1) { colorNow = "#00FF00"; }
 		return colorNow;
+	}
+
+	function numHex(s)
+	{
+		var a = s.toString(16);
+		if ((a.length % 2) > 0) {
+			a = "0" + a;
+		}
+		return a;
+	}
+
+	function barColor(index) {
+		// set bar color based on calculated averages
+                var percent = 100 * (tariffValues[index] - minTariffValue) / (maxTariffValue - minTariffValue);
+		const r = percent > 50 ? 255 : Math.round(255 * percent/50);
+		const g = percent < 50 ? 255 : Math.round(255 - (255 * (percent-50)/50));
+		return "#" + numHex(r) + numHex(g) + "00"; 
 	}
 
 	function normalizeTariff(tariff) {
@@ -173,7 +192,12 @@ App {
                                         tariffValues = tariffs.slice();
 
                                         // calculate the quartiles for the low and high tariff
-                                        var quartiles= SpotenergyJS.getQuartiles(tariffs);
+					var quartiles;
+					if (settings.algoMedian) {
+                                        	quartiles = SpotenergyJS.getQuartilesMedian(tariffs);
+					} else {
+                                        	quartiles = SpotenergyJS.getQuartilesAverage(tariffs);
+					}
                                         tariffQ1 = quartiles[0];
                                         tariffMedian = quartiles[1];
                                         tariffQ3 = quartiles[2];
@@ -226,7 +250,12 @@ App {
 					tariffValues = tariffs.slice(); // copy the collected tarrifs into the app property (somehow not possible without the tariffs array)
 
 					// calculate the quartiles for the low and high tariff 
-					var quartiles= SpotenergyJS.getQuartiles(tariffs);
+					var quartiles;
+					if (settings.algoMedian) {
+						SpotenergyJS.getQuartilesMedian(tariffs);
+					} else {
+						SpotenergyJS.getQuartilesAverage(tariffs);
+					}
 					tariffQ1 = quartiles[0];
 					tariffMedian = quartiles[1];
 					tariffQ3 = quartiles[2];

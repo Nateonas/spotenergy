@@ -31,7 +31,7 @@ Tile {
 		if (dimState && !app.settings.showColorinDim) {
 			return (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTextColor : colors.tileTextColor	
 		} else {
-			return app.currentTextColor()
+			return app.tariffTextColor(app.currentTariffUsage) 
 		}
 
 	}
@@ -111,6 +111,17 @@ Tile {
 		opacity: 0.5
 		color: dimState ? "#ffffff" : "#ff0000"
 		anchors.bottomMargin: 10 + calculateHeight(spotenergyTileRow.height,app.tariffQ3)
+		border.width: 0
+	}
+	Rectangle {
+		id: spotenergyMedianLine
+		anchors.bottom: spotenergyTileRow.bottom
+		anchors.left: spotenergyTileRow.left
+		width: spotenergyTileRow.width 
+		height: 1 
+		opacity: 0.5
+		color: dimState ? "#ffffff" : "#ffff00"
+		anchors.bottomMargin: 10 + calculateHeight(spotenergyTileRow.height,app.tariffMedian)
 		border.width: 0
 	}
 	Rectangle {

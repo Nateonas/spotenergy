@@ -1,3 +1,7 @@
+2.1.2
+- add average vs median choice for calculating quartiles
+- add colored bars in main screen view
+
 2.1.1
 - update the 2022 energy taxes
 

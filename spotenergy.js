@@ -8,16 +8,33 @@ function getMedian(args) {
 	}
 }
 
-function getQuartiles(args) {
+function getQuartilesMedian(args) {
 	if (args) { 
 		if (!args.length) {return 0};
 		var median = getMedian(args);
 		var firstHalf = args.filter(function(f){return f < median});
 		var secondHalf = args.filter(function(f){return f > median});
-		console.log(firstHalf);
-		console.log(secondHalf);
 		var q1 = getMedian(firstHalf);
 		var q3 = getMedian(secondHalf);
 		return [q1,median,q3];
+	}
+}
+
+function getAverage(args) {
+        if (args) {
+                if (!args.length) {return 0};
+                return args.reduce(function(p,c,i,a){return p + (c/a.length)},0);
+        }
+}
+
+function getQuartilesAverage(args) {
+	if (args) { 
+		if (!args.length) {return 0};
+		var average = getAverage(args);
+		var firstHalf = args.filter(function(f){return f < average});
+		var secondHalf = args.filter(function(f){return f > average});
+		var q1 = getAverage(firstHalf);
+		var q3 = getAverage(secondHalf);
+		return [q1,average,q3];
 	}
 }
