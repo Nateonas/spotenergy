@@ -1,3 +1,7 @@
+2.1.3
+- also colored in tile when not dim
+- fix error when getting tariffs from easyenergy
+
 2.1.2
 - add average vs median choice for calculating quartiles
 - add colored bars in main screen view

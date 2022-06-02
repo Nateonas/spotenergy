@@ -16,17 +16,6 @@ Tile {
 		return h
 	}
 
-	// pick the bar color depending on dimstate and current hour
-	function pickBarColor(index) {
-		if ((index + app.startHour) === app.currentHour)  {
-			var barColor = dimState ? "#9ea7a8" : "#0099ff"
-			return barColor
-		} else  {
-			var barColor = dimState ? "#d7e0e6" : "#ff6600"
-			return barColor
-		}	       
-	}
-
 	function pickTileTextColor() {
 		if (dimState && !app.settings.showColorinDim) {
 			return (typeof dimmableColors !== 'undefined') ? dimmableColors.tileTextColor : colors.tileTextColor	
@@ -87,7 +76,9 @@ Tile {
 					anchors.bottom: parent.bottom
 					anchors.bottomMargin: 10
 					anchors.horizontalCenter: parent.horizontalCenter
-					color: pickBarColor(index)
+                                        border.width: 1
+                                        border.color: dimState ? (((index + app.startHour) === app.currentHour) ? "#9ea7a8" : "#9ea7a8") : (app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600"))
+                                        color: ((index + app.startHour) === app.currentHour) ? (dimState ? "#9ea7a8":"#0099ff") : ( app.settings.coloredBars ? (dimState ? "#d7e0e6":app.barColor(index)) : (dimState ? "#d7e0e6":"#ff6600"))
 					height: calculateHeight(spotenergyTileRow.height,app.tariffValues[index])
 					width: (spotenergyTileRow.width / app.datapoints - 2) // two pixels smaller than the parent item to keep gaps between the bars
 				}

@@ -252,9 +252,9 @@ App {
 					// calculate the quartiles for the low and high tariff 
 					var quartiles;
 					if (settings.algoMedian) {
-						SpotenergyJS.getQuartilesMedian(tariffs);
+						quartiles = SpotenergyJS.getQuartilesMedian(tariffs);
 					} else {
-						SpotenergyJS.getQuartilesAverage(tariffs);
+						quartiles = SpotenergyJS.getQuartilesAverage(tariffs);
 					}
 					tariffQ1 = quartiles[0];
 					tariffMedian = quartiles[1];

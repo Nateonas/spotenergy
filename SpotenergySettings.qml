@@ -290,7 +290,7 @@ Screen {
 		}
 		font.pixelSize: 16
 		font.family: qfont.semiBold.name
-		text: "Use median as average"
+		text: "Median ipv average"
 	}
 
 	OnOffToggle {
@@ -312,7 +312,7 @@ Screen {
 		}
 		font.pixelSize: 16
 		font.family: qfont.semiBold.name
-		text: "Show colored bars"
+		text: "Gekleurde balken"
 	}
 
 	OnOffToggle {
@@ -329,7 +329,7 @@ Screen {
 		id: energyTaxValueLabel
 		width: isNxt ? 600 : 350
 		height: isNxt ? 45 : 35
-		leftText: "Energie belasting"
+		leftText: "Energie belasting (ex BTW)"
 
 		anchors {
 			left: taxToggle.right
@@ -363,7 +363,7 @@ Screen {
 		id: odeTaxValueLabel
 		width: isNxt ? 600 : 350
 		height: isNxt ? 45 : 35
-		leftText: "ODE belasting"
+		leftText: "ODE belasting (ex BTW)"
 
 		anchors {
 			left: energyTaxValueLabel.left

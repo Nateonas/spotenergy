@@ -98,8 +98,8 @@ Screen {
 					anchors.horizontalCenter: parent.horizontalCenter
 					radius: 10
 					border.width: 5
-					border.color: ((index + app.startHour) === app.currentHour) ? "#0099ff" : ( app.settings.coloredBars ? app.barColor(index) : "#ff6600")
-					color: app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600")
+					border.color: app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600")
+					color: ((index + app.startHour) === app.currentHour) ? "#0099ff" : ( app.settings.coloredBars ? app.barColor(index) : "#ff6600")
 					height: calculateHeight(spotenergyScreenRow.height,app.tariffValues[index])
 					width: (spotenergyScreenRow.width / app.datapoints - 5) // two pixels smaller than the parent item to keep gaps between the bars
 				}
