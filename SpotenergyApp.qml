@@ -24,6 +24,7 @@ App {
                 "tariffEnergyTax": 0.03679,
                 "tariffODETax": 0.0305,
 		"tariffVAT": 21,
+		"tariffBonus": 0.00,
 		"domoticzEnable": false, 
 		"domoticzHost": "domoticz.local",
 		"domoticzPort": "8080",
@@ -120,7 +121,7 @@ App {
 
 	function normalizeTariff(tariff) {
 		// adds tax to tariffs if requested and presents in euros with max 4 decimals
-		var normalizedTariff = (settings.includeTax) ? parseInt((settings.tariffEnergyTax + settings.tariffODETax + tariff) * ((settings.tariffVAT / 100)+1) * 10000)/10000 : parseInt(tariff * 10000)/10000 ;
+		var normalizedTariff = (settings.includeTax) ? parseInt((settings.tariffEnergyTax + settings.tariffODETax + settings.tariffBonus + tariff) * ((settings.tariffVAT / 100)+1) * 10000)/10000 : parseInt(tariff * 10000)/10000 ;
 		return normalizedTariff;	
 	}
 
@@ -215,6 +216,7 @@ App {
 		}
 		var urlAppend = "TimeInterval=" + encodeURIComponent(now.toISOString() + "/" + endDate.toISOString());
 		var urlEntsoe = "https://transparency.entsoe.eu/api?securityToken=68aa46a3-3b1b-4071-ac6b-4372830b114f&documentType=A44&Out_Domain=10YNL----------L&In_Domain=10YNL----------L&" + urlAppend;
+		console.log("SpotEnergy entsoe url: " + urlEntsoe);
 		xmlhttp.open("GET", urlEntsoe, true);
 		xmlhttp.send();
 	}

@@ -1,3 +1,6 @@
+2.1.4
+- add supplier bonus tariff
+
 2.1.3
 - also colored in tile when not dim
 - fix error when getting tariffs from easyenergy

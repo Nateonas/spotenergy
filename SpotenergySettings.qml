@@ -22,6 +22,7 @@ Screen {
 			energyTaxValueLabel.rightText = app.settings.tariffEnergyTax;
 			odeTaxValueLabel.rightText = app.settings.tariffODETax;
 			vatTaxValueLabel.rightText = app.settings.tariffVAT;
+			bonusValueLabel.rightText = app.settings.tariffBonus;
 			scaleToggle.isSwitchedOn = app.settings.scaleGraph; 
 			dimColorToggle.isSwitchedOn = app.settings.showColorinDim;
 			lookBackValueLabel.rightText = app.settings.lookbackHours;
@@ -49,6 +50,7 @@ Screen {
 		temp.tariffEnergyTax = parseFloat(energyTaxValueLabel.rightText);
 		temp.tariffODETax = parseFloat(odeTaxValueLabel.rightText);
 		temp.tariffVAT = parseFloat(vatTaxValueLabel.rightText);
+		temp.tariffBonus = parseFloat(bonusValueLabel.rightText);
 		temp.scaleGraph = scaleToggle.isSwitchedOn;
 		temp.showColorinDim = dimColorToggle.isSwitchedOn;
 		temp.lookbackHours = parseInt(lookBackValueLabel.rightText);
@@ -152,6 +154,21 @@ Screen {
 			// need to check if contains only numbers (hours) 
 			if (text.match(/^[0-9]*$/)) {
 				vatTaxValueLabel.rightText = text; 
+			}
+		}
+	}
+
+	function updateBonusValueLabel(text) {
+		if (text) {
+			// need to santize the input to a dot-seperated decimal value
+			if (text.match(/,/)) {
+				bonusValueLabel.rightText = text.replace(",",".");
+			}
+			else if (text.match(/\./)) {
+				bonusValueLabel.rightText = text;
+			}
+			else {
+				bonusValueLabel.rightText = "0."+text; // invoer in centen omzetten naar euro
 			}
 		}
 	}
@@ -427,6 +444,40 @@ Screen {
 			qnumKeyboard.open("Voer BTW percentage in", vatTaxValueLabel.rightText, "%", 1 , updateVATTaxValueLabel);
 		}
 	}
+	SingleLabel {
+		id: bonusValueLabel
+		width: isNxt ? 600 : 350
+		height: isNxt ? 45 : 35
+		leftText: "Leverancier opslag"
+
+		anchors {
+			left: vatTaxValueLabel.left
+			leftMargin: 0
+			top: vatTaxValueLabel.bottom
+			topMargin: 10 
+		}
+
+		onClicked: {
+			qnumKeyboard.open("Voer leverancier opslag in", bonusValueLabel.rightText, "%", 1 , updateBonusValueLabel);
+		}
+	}
+
+	IconButton {
+		id: bonusValueLabelButton;
+		width: 40
+		iconSource: "qrc:/tsc/edit.png"
+
+		anchors {
+			left: bonusValueLabel.right
+			leftMargin: 6
+			top: bonusValueLabel.top
+		}
+
+		bottomClickMargin: 3
+		onClicked: {
+			qnumKeyboard.open("Voer leverancier opslag in", bonusValueLabel.rightText, "%", 1 , updateBonusValueLabel);
+		}
+	}
 	// lookback
 	SingleLabel {
 		id: lookBackValueLabel
@@ -435,8 +486,8 @@ Screen {
 		leftText: "Uren terug"
 
 		anchors {
-			left: vatTaxValueLabel.left
-			top: vatTaxValueLabel.bottom                       
+			left: bonusValueLabel.left
+			top: bonusValueLabel.bottom                       
 			topMargin: 10
 		}
 
@@ -544,7 +595,7 @@ Screen {
 
 	SingleLabel {
 		id: domoticzPortLabel
-		width: isNxt ? 600 : 350
+		width: isNxt ? 300 : 175
 		height: isNxt ? 45 : 35
 		leftText: "Port"
 
@@ -576,31 +627,15 @@ Screen {
 	}
 
 
-	SingleLabel {
-		id: domoticzIdxLabel
-		width: isNxt ? 600 : 350
-		height: isNxt ? 45 : 35
-		leftText: "Idx"
-
-		anchors {
-			left: domoticzPortLabel.left
-			top: domoticzPortLabel.bottom                       
-			topMargin: 10
-		}
-
-		onClicked: {
-			qnumKeyboard.open("Alert device IDX", domoticzIdxLabel.rightText, "Nummer", 1 , updateDomoticzIdxLabel,numValidate);
-		}
-	}
 	IconButton {
 		id: domoticzIdxLabelButton;
 		width: 40
 		iconSource: "qrc:/tsc/edit.png"
 
 		anchors {
-			left: domoticzIdxLabel.right
-			leftMargin: 6
-			top: domoticzIdxLabel.top
+			left: domoticzHostLabelButton.left
+			top: domoticzHostLabel.bottom
+			topMargin: 10
 		}
 
 		bottomClickMargin: 3
@@ -609,6 +644,23 @@ Screen {
 		}
 	}
 
+	SingleLabel {
+		id: domoticzIdxLabel
+		width: isNxt ? 200 : 125
+		height: isNxt ? 45 : 35
+		leftText: "Idx"
+
+		anchors {
+			right: domoticzIdxLabelButton.left
+			rightMargin: 6
+			top: domoticzHostLabel.bottom
+			topMargin: 10
+		}
+
+		onClicked: {
+			qnumKeyboard.open("Alert device IDX", domoticzIdxLabel.rightText, "Nummer", 1 , updateDomoticzIdxLabel,numValidate);
+		}
+	}
 
 
 }
