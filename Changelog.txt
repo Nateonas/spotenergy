@@ -1,3 +1,6 @@
+2.1.6
+- change entsoe api url
+
 2.1.5
 - update the 2023 energy taxes (no ODE, but keep in settings for future use)
 

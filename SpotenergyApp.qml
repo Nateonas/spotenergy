@@ -215,7 +215,7 @@ App {
 			}
 		}
 		var urlAppend = "TimeInterval=" + encodeURIComponent(now.toISOString() + "/" + endDate.toISOString());
-		var urlEntsoe = "https://transparency.entsoe.eu/api?securityToken=68aa46a3-3b1b-4071-ac6b-4372830b114f&documentType=A44&Out_Domain=10YNL----------L&In_Domain=10YNL----------L&" + urlAppend;
+		var urlEntsoe = "https://web-api.tp.entsoe.eu/api?securityToken=68aa46a3-3b1b-4071-ac6b-4372830b114f&documentType=A44&Out_Domain=10YNL----------L&In_Domain=10YNL----------L&" + urlAppend;
 		console.log("SpotEnergy entsoe url: " + urlEntsoe);
 		xmlhttp.open("GET", urlEntsoe, true);
 		xmlhttp.send();
