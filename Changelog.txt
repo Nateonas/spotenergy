@@ -1,3 +1,7 @@
+2.2.3
+- reject entsoe data with a leading gap (e.g. today's prices not yet published)
+  and fall back to easyenergy instead of showing shifted bars
+
 2.2.2
 - re-add easyenergy as backup source when entsoe fails or returns too few datapoints
 - fix entsoe gap-filling to use the period's declared end time, so trailing
