@@ -181,6 +181,16 @@ App {
 			return false;
 		}
 
+		// hourlyTemp is packed contiguously from whatever data survived the time filter, but
+		// currentBarIndex below assumes tariffs[0] is exactly "now" (the lookback-adjusted start).
+		// If the source is missing data for the current period (e.g. an entire day), hourlyTemp[0]
+		// silently starts later than "now" and every bar would be shifted — detect that and bail
+		// out so the caller can fall back to another source instead of showing misaligned data.
+		if (hourlyTemp[0].timestamp !== now.getTime()) {
+			console.log("SpotEnergy: " + sourceLabel + " data does not start at the expected time (gap at start), rejecting!");
+			return false;
+		}
+
 		minTariffValue = 1000;
 		maxTariffValue = -1000;
 
