@@ -18,6 +18,7 @@ Screen {
 	onShown: {
 		addCustomTopRightButton("Opslaan");
 		if (firstShown) {  // only update the input boxes if this is the first time shown, not while coming back from a keyboard input
+			entsoeTokenLabel.rightText = app.settings.entsoeToken;
 			taxToggle.isSwitchedOn = app.settings.includeTax;
 			energyTaxValueLabel.rightText = app.settings.tariffEnergyTax;
 			odeTaxValueLabel.rightText = app.settings.tariffODETax;
@@ -33,6 +34,7 @@ Screen {
 			domoticzIdxLabel.rightText = app.settings.domoticzIdx;
 			algoMedianToggle.isSwitchedOn = app.settings.algoMedian;
 			coloredBarsToggle.isSwitchedOn = app.settings.coloredBars;
+			quarterHourToggle.isSwitchedOn = app.settings.showQuarterHour;
 			firstShown = false;
 		}
 	}
@@ -60,7 +62,9 @@ Screen {
 		temp.domoticzPort = domoticzPortLabel.rightText;
 		temp.domoticzIdx = domoticzIdxLabel.rightText;
 		temp.algoMedian = algoMedianToggle.isSwitchedOn; 
-		temp.coloredBars = coloredBarsToggle.isSwitchedOn; 
+		temp.coloredBars = coloredBarsToggle.isSwitchedOn;
+		temp.showQuarterHour = quarterHourToggle.isSwitchedOn;
+		temp.entsoeToken = entsoeTokenLabel.rightText;
 		app.settings = temp;
 
 		firstShown = true; // we have saved the settings so on a fresh settings screen we can load the input boxes with the new app settings
@@ -115,6 +119,12 @@ Screen {
 			return null;
 		}
 		return null;
+	}
+
+	function updateEntsoeTokenLabel(text) {
+		if (text) {
+			entsoeTokenLabel.rightText = text;
+		}
 	}
 
 	function updateEnergyTaxValueLabel(text) {
@@ -319,12 +329,12 @@ Screen {
 		leftIsSwitchedOn: false
 	}
 
-	// use colored bars 
+	// use colored bars
 	Text {
 		id: coloredBarsToggleText
 		anchors {
 			left: dimColorText.left
-			top: algoMedianToggleText.bottom                       
+			top: algoMedianToggleText.bottom
 			topMargin: 40
 		}
 		font.pixelSize: 16
@@ -341,6 +351,64 @@ Screen {
 		leftIsSwitchedOn: false
 	}
 
+	// show 15-minute bars instead of hourly averaged bars
+	Text {
+		id: quarterHourToggleText
+		anchors {
+			left: dimColorText.left
+			top: coloredBarsToggleText.bottom
+			topMargin: 40
+		}
+		font.pixelSize: 16
+		font.family: qfont.semiBold.name
+		text: "15 minuten balken"
+	}
+
+	OnOffToggle {
+		id: quarterHourToggle
+		height: 36
+		anchors.left: coloredBarsToggle.left
+		anchors.leftMargin: 0
+		anchors.top: quarterHourToggleText.top
+		leftIsSwitchedOn: false
+	}
+
+	// ENTSOE API token
+	SingleLabel {
+		id: entsoeTokenLabel
+		width: isNxt ? 600 : 350
+		height: isNxt ? 45 : 35
+		leftText: "ENTSOE API token"
+
+		anchors {
+			left: taxToggle.right
+			leftMargin: 20
+			top: taxToggle.top
+			topMargin: 0
+		}
+
+		onClicked: {
+			qkeyboard.open("ENTSOE API token", entsoeTokenLabel.rightText, updateEntsoeTokenLabel);
+		}
+	}
+
+	IconButton {
+		id: entsoeTokenLabelButton
+		width: 40
+		iconSource: "qrc:/tsc/edit.png"
+
+		anchors {
+			left: entsoeTokenLabel.right
+			leftMargin: 6
+			top: entsoeTokenLabel.top
+		}
+
+		bottomClickMargin: 3
+		onClicked: {
+			qkeyboard.open("ENTSOE API token", entsoeTokenLabel.rightText, updateEntsoeTokenLabel);
+		}
+	}
+
 	// energy tax values
 	SingleLabel {
 		id: energyTaxValueLabel
@@ -349,10 +417,10 @@ Screen {
 		leftText: "Energie belasting (ex BTW)"
 
 		anchors {
-			left: taxToggle.right
-			leftMargin: 20
-			top: taxToggle.top
-			topMargin: 0 
+			left: entsoeTokenLabel.left
+			leftMargin: 0
+			top: entsoeTokenLabel.bottom
+			topMargin: 10
 		}
 
 		onClicked: {

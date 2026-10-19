@@ -87,29 +87,50 @@ Screen {
 		height: isNxt ? 340 : 250
 		Repeater {
 			id: spotenergyRowRepeater
-			model: app.datapoints
+			model: app.settings.showQuarterHour ? app.datapointsQuarter : app.datapoints
 			Item {
+				property int totalPoints: app.settings.showQuarterHour ? app.datapointsQuarter : app.datapoints
+				property real barValue: app.settings.showQuarterHour ? app.tariffValuesQuarter[index] : app.tariffValues[index]
+				property bool isCurrent: index === (app.settings.showQuarterHour ? app.currentBarIndexQuarter : app.currentBarIndex)
+				property bool isHourBoundary: app.settings.showQuarterHour && (index % 4 === 0) && (index > 0)
+
+				property real barWidth: (totalPoints > 0) ? spotenergyScreenRow.width / totalPoints : 0
+				property int barBorder: barWidth > 20 ? 5 : 1
+				property int barRadius: barWidth > 20 ? 10 : 2
+
 				height: spotenergyScreenRow.height
-				width: (app.datapoints > 0) ? spotenergyScreenRow.width / app.datapoints : 0
+				width: barWidth
+
+				// hour boundary separator in 15-min mode
+				Rectangle {
+					visible: isHourBoundary
+					anchors.left: parent.left
+					anchors.top: parent.top
+					anchors.bottom: parent.bottom
+					width: 1
+					color: "#ffffff"
+					opacity: 0.3
+				}
+
 				Rectangle {
 					id: spotenergyHourBars
 					anchors.bottom: parent.bottom
 					anchors.bottomMargin: 30
 					anchors.horizontalCenter: parent.horizontalCenter
-					radius: 10
-					border.width: 5
-					border.color: app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600")
-					color: ((index + app.startHour) === app.currentHour) ? "#0099ff" : ( app.settings.coloredBars ? app.barColor(index) : "#ff6600")
-					height: calculateHeight(spotenergyScreenRow.height,app.tariffValues[index])
-					width: (spotenergyScreenRow.width / app.datapoints - 5) // two pixels smaller than the parent item to keep gaps between the bars
+					radius: barRadius
+					border.width: barBorder
+					border.color: app.settings.coloredBars ? app.barColor(barValue) : (isCurrent ? "#0099ff" : "#ff6600")
+					color: isCurrent ? "#0099ff" : ( app.settings.coloredBars ? app.barColor(barValue) : "#ff6600")
+					height: calculateHeight(spotenergyScreenRow.height, barValue)
+					width: barWidth - barBorder
 				}
 				Text {
 					anchors.bottom: parent.bottom
 					anchors.horizontalCenter: parent.horizontalCenter
-					text: (index + app.startHour) % 24
+					text: app.settings.showQuarterHour ? (Math.floor(index / 4) + app.startHour) % 24 : (index + app.startHour) % 24
 					font.pointSize: 12
 					color: colors.tileTextColor
-					visible: !((index + app.startHour) % 3) //show each 3 hours an x-index
+					visible: app.settings.showQuarterHour ? (index % 4 === 0 && !((Math.floor(index / 4) + app.startHour) % 3)) : !((index + app.startHour) % 3)
 				}
 			}
 		}

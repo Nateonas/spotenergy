@@ -77,8 +77,8 @@ Tile {
 					anchors.bottomMargin: 10
 					anchors.horizontalCenter: parent.horizontalCenter
                                         border.width: 1
-                                        border.color: dimState ? (((index + app.startHour) === app.currentHour) ? "#9ea7a8" : "#9ea7a8") : (app.settings.coloredBars ? app.barColor(index) : (((index + app.startHour) === app.currentHour) ? "#0099ff" : "#ff6600"))
-                                        color: ((index + app.startHour) === app.currentHour) ? (dimState ? "#9ea7a8":"#0099ff") : ( app.settings.coloredBars ? (dimState ? "#d7e0e6":app.barColor(index)) : (dimState ? "#d7e0e6":"#ff6600"))
+                                        border.color: dimState ? "#9ea7a8" : (app.settings.coloredBars ? app.barColor(app.tariffValues[index]) : ((index === app.currentBarIndex) ? "#0099ff" : "#ff6600"))
+                                        color: (index === app.currentBarIndex) ? (dimState ? "#9ea7a8":"#0099ff") : ( app.settings.coloredBars ? (dimState ? "#d7e0e6":app.barColor(app.tariffValues[index])) : (dimState ? "#d7e0e6":"#ff6600"))
 					height: calculateHeight(spotenergyTileRow.height,app.tariffValues[index])
 					width: (spotenergyTileRow.width / app.datapoints - 2) // two pixels smaller than the parent item to keep gaps between the bars
 				}

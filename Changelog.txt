@@ -1,3 +1,21 @@
+2.2.3
+- reject entsoe data with a leading gap (e.g. today's prices not yet published)
+  and fall back to easyenergy instead of showing shifted bars
+
+2.2.2
+- re-add easyenergy as backup source when entsoe fails or returns too few datapoints
+- fix entsoe gap-filling to use the period's declared end time, so trailing
+  points omitted because the price didn't change are no longer dropped
+- fix binding-order bug causing undefined bar values in the large screen
+
+2.2.1
+- in quarter mode price was still the hour average price, fixed
+
+2.2.0
+- support ENTSOE 15-minute resolution data
+- add setting to toggle between 15-min bars and hourly averaged bars
+- remove easyenergy fallback (API no longer works)
+
 2.1.6
 - change entsoe api url
 
